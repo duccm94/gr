@@ -14,25 +14,14 @@
     <p class="alert"><%= alert %></p>
     <% if user_signed_in? && current_user.is_admin? %>
       <%= render "layouts/admin_header" %>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-1 sidebar">
-            <%= render "layouts/admin_sidebar" %>
-          </div>
-          <div class="col-sm-11 col-sm-offset-1 main">
-            <div id="flash_error">
-              <%= render "shared/flash_error" %>
-            </div>
-            <%= yield %>
-          </div>
-        </div>
+      <div class="container">
+        <%= render "layouts/flash" %>
+        <%= yield %>
       </div>
     <% else %>
       <%= render "layouts/header" %>
       <div class="container">
-        <div id="flash_error">
-          <%= render "shared/flash_error" %>
-        </div>
+        <%= render "layouts/flash" %>
         <%= yield %>
       </div>
       <%= render "layouts/footer" %>
