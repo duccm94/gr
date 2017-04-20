@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Gr</title>
+    <title><%= full_title yield(:title) %> | Training System</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbolinks-track": "reload" %>
+    <%= render "layouts/shim" %>
   </head>
 
   <body>
-    <%= yield %>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <% if user_signed_in? && current_user.is_admin? %>
+      <%= render "layouts/admin_header" %>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-1 sidebar">
+            <%= render "layouts/admin_sidebar" %>
+          </div>
+          <div class="col-sm-11 col-sm-offset-1 main">
+            <div id="flash_error">
+              <%= render "shared/flash_error" %>
+            </div>
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <%= render "layouts/header" %>
+      <div class="container">
+        <div id="flash_error">
+          <%= render "shared/flash_error" %>
+        </div>
+        <%= yield %>
+      </div>
+      <%= render "layouts/footer" %>
+    <% end %>
   </body>
 </html>
