@@ -15,6 +15,10 @@ gem "jquery-rails"
 gem "turbolinks", "~> 5"
 gem "jbuilder", "~> 2.5"
 gem "devise"
+gem "cancancan"
+gem "inherited_resources", "~> 1.7"
+gem "activeadmin", "~> 1.0.0.pre5"
+gem "formtastic", "~> 3.1", ">= 3.1.5"
 
 group :development, :test do
   gem "sqlite3"
