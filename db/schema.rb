@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170420124145) do
+ActiveRecord::Schema.define(version: 20170427025024) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -26,24 +26,68 @@ ActiveRecord::Schema.define(version: 20170420124145) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
+  create_table "ckeditor_assets", force: :cascade do |t|
+    t.string   "data_file_name",               null: false
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.string   "type",              limit: 30
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.index ["type"], name: "index_ckeditor_assets_on_type"
+  end
+
   create_table "courses", force: :cascade do |t|
+    t.string   "code"
     t.string   "name"
     t.string   "image"
     t.text     "description"
+    t.text     "content"
     t.integer  "status",      default: 0
     t.date     "start_date"
     t.date     "end_date"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.index ["code"], name: "index_courses_on_code", unique: true
+  end
+
+  create_table "evaluation_criteria", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "max_point"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "evaluation_items", force: :cascade do |t|
+    t.integer  "point",                     default: 0
+    t.string   "name"
+    t.integer  "evaluation_criterium_id"
+    t.integer  "user_course_evaluation_id"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.index ["evaluation_criterium_id"], name: "index_evaluation_items_on_evaluation_criterium_id"
+    t.index ["user_course_evaluation_id"], name: "index_evaluation_items_on_user_course_evaluation_id"
   end
 
   create_table "subjects", force: :cascade do |t|
-    t.string   "identifier"
+    t.string   "name"
     t.text     "description"
+    t.text     "content"
+    t.string   "redmine_identifier"
     t.integer  "course_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.index ["course_id"], name: "index_subjects_on_course_id"
+  end
+
+  create_table "user_course_evaluations", force: :cascade do |t|
+    t.integer  "total_point"
+    t.text     "content"
+    t.integer  "user_course_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["user_course_id"], name: "index_user_course_evaluations_on_user_course_id"
   end
 
   create_table "user_courses", force: :cascade do |t|

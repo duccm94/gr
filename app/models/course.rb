@@ -1,11 +1,12 @@
 class Course < ApplicationRecord
-  ATTRIBUTES_PARAMS = [:name, :image, :description, :status,
+  ATTRIBUTES_PARAMS = [:code, :name, :image, :description, :content, :status,
     :start_date, :end_date, user_ids: [],
-    subjects_attributes: [:id, :identifier, :description, :_destroy]]
+    subjects_attributes: [:id, :name, :redmine_identifier, :description, :content, :_destroy]]
 
   enum status: [:init, :progress, :finish]
 
   validate :check_end_date, on: [:create, :update]
+  validates :code, presence: true
   validates :name, presence: true
   validates :start_date, presence: true
   validates :end_date, presence: true
@@ -16,7 +17,7 @@ class Course < ApplicationRecord
   has_many :users, through: :user_courses, dependent: :destroy
 
   accepts_nested_attributes_for :subjects,
-    reject_if: proc {|attributes| attributes["identifier"].blank?}, allow_destroy: true
+    reject_if: proc {|attributes| attributes["name"].blank?}, allow_destroy: true
 
   scope :init_courses, ->{where status: :init}
   scope :progress_courses, ->{where status: :progress}

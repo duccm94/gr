@@ -3,16 +3,17 @@ class Subject < ApplicationRecord
 
   after_create :create_user_subjects_when_add_new_subject
 
-  ATTRIBUTES_PARAMS = [:identifier, :description, :course_id]
+  ATTRIBUTES_PARAMS = [:name, :redmine_identifier, :description, :content, :course_id]
 
-  validates :identifier, presence: true
+  validates :name, presence: true
+  validates :redmine_identifier, presence: true
 
   belongs_to :course
 
   has_many :user_subjects, dependent: :destroy
   has_many :users, through: :user_subjects, dependent: :destroy
 
-  delegate :name, to: :course, prefix: true, allow_nil: true
+  delegate :code, :name, to: :course, prefix: true, allow_nil: true
 
   def subject_trainees
     users.trainees
