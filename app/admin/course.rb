@@ -49,6 +49,8 @@ ActiveAdmin.register Course do
         column :description
       end
     end
+
+    active_admin_comments
   end
 
   sidebar I18n.t("active_admin.course_stats"), only: :show do
