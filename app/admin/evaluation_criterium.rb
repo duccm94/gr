@@ -25,6 +25,8 @@ ActiveAdmin.register EvaluationCriterium do
       row :max_point
       row :created_at
     end
+
+    active_admin_comments
   end
 
   #new & edit

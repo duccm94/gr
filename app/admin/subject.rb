@@ -26,6 +26,8 @@ ActiveAdmin.register Subject do
       row :content {subject.content.html_safe}
       row :created_at
     end
+
+    active_admin_comments
   end
 
   sidebar I18n.t("active_admin.trainees"), only: :show do
