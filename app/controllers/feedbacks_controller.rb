@@ -46,5 +46,4 @@ class FeedbacksController < ApplicationController
   def feedback_params
     params.require(:feedback).permit :title, :content
   end
-
 end

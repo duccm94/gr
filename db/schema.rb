@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501175258) do
+ActiveRecord::Schema.define(version: 20170505080228) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -36,6 +36,14 @@ ActiveRecord::Schema.define(version: 20170501175258) do
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.index ["type"], name: "index_ckeditor_assets_on_type"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["sender_id", "receiver_id"], name: "index_conversations_on_sender_id_and_receiver_id", unique: true
   end
 
   create_table "courses", force: :cascade do |t|
@@ -78,6 +86,16 @@ ActiveRecord::Schema.define(version: 20170501175258) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text     "content"
+    t.integer  "conversation_id"
+    t.integer  "user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "subjects", force: :cascade do |t|

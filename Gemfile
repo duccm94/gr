@@ -24,6 +24,7 @@ gem "carrierwave"
 gem "mini_magick"
 gem "public_activity", "~> 1.5"
 gem "redis", "~> 3.3", ">= 3.3.3"
+gem "jquery-ui-rails"
 
 group :development, :test do
   gem "sqlite3"
