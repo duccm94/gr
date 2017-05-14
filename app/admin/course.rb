@@ -2,12 +2,14 @@ ActiveAdmin.register Course do
   menu priority: 3
   permit_params Course::ATTRIBUTES_PARAMS
 
+  #index
   scope :all
   scope :init_courses
   scope :progress_courses
   scope :finish_courses
 
-  #index
+  config.sort_order = "status_asc"
+
   index do
     id_column
     column :code
@@ -32,13 +34,18 @@ ActiveAdmin.register Course do
       row :id
       row :code
       row :name
-      row :image
+      row :image {course.image.file.filename}
+      row :image do
+        image_tag course.image_url, class: "img-responsive",
+          size: Settings.admin.course_show_image if course.image?
+      end
       row :status {status_tag course.status}
       row :description
       row :content {course.content.html_safe}
       row :start_date
       row :end_date
       row :created_at
+      row :updated_at
       row :subjects {link_to I18n.t("active_admin.all_subjects"),
         admin_course_subjects_path(course.id)}
     end
@@ -87,7 +94,8 @@ ActiveAdmin.register Course do
         f.inputs I18n.t("active_admin.course_basic") do
           f.input :code
           f.input :name
-          f.input :image
+          f.input :image, as: :file, id: "course_image", hint: image_preview(f.object)
+          f.input :image_cache, as: :hidden
           f.input :description, input_html: {rows: 4}
           f.input :content, as: :ckeditor
           f.input :start_date, as: :datepicker
