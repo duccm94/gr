@@ -1,7 +1,9 @@
 class Course < ApplicationRecord
-  ATTRIBUTES_PARAMS = [:code, :name, :image, :description, :content, :status,
-    :start_date, :end_date, user_ids: [],
+  ATTRIBUTES_PARAMS = [:code, :name, :image, :image_cache, :description,
+    :content, :status, :start_date, :end_date, user_ids: [],
     subjects_attributes: [:id, :name, :redmine_identifier, :description, :content, :_destroy]]
+
+  mount_uploader :image, ImageUploader
 
   enum status: [:init, :progress, :finish]
 
