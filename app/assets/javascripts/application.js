@@ -60,15 +60,23 @@ function loadFile(input) {
 })();
 
 $(document).on('click', '.js-trigger', function() {
-    $('.js-trigger').toggleClass('button-transition')
-    if ($('.chat').css('right') == '-300px') {
-      $('.chat').animate({right: "+=300px"}, 300);
-      $('.conversation').animate({right: "+=300px"}, 300);
+  $('.js-trigger').toggleClass('button-transition')
+  if ($('.chat').css('right') == '-220px') {
+    $('.chat').animate({right: "+=220px"}, 300);
+    $('.conversation').animate({right: "+=220px"}, 300);
+  }
+  else {
+    $('.chat').animate({right: "-=220px"}, 300);
+    $('.conversation').animate({right: "-=220px"}, 300);
+  }
+});
+
+$(document).on('click', '.chat__human', function() {
+  $(document).bind('DOMNodeInserted', '#conversations-list', function() {
+    if (($('.chat').css('right') == '0px') && ($('.conversation').css('right') == '120px')) {
+      $('.conversation').css('right', '+=220px');
     }
-    else {
-      $('.chat').animate({right: "-=300px"}, 300);
-      $('.conversation').animate({right: "-=300px"}, 300);
-    }
+  });
 });
 
 var intervalId;

@@ -27,6 +27,7 @@ gem "redis", "~> 3.3", ">= 3.3.3"
 gem "jquery-ui-rails"
 gem "rails-assets-holderjs", source: "https://rails-assets.org"
 gem "config"
+gem "chartkick"
 
 group :development, :test do
   gem "sqlite3"
@@ -38,6 +39,7 @@ group :development do
   gem "listen", "~> 3.0.5"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
+  gem "faker", github: "stympy/faker"
 end
 
 group :production do

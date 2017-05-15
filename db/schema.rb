@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 20170505080228) do
     t.date     "end_date"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
-    t.index ["code"], name: "index_courses_on_code", unique: true
   end
 
   create_table "evaluation_criteria", force: :cascade do |t|
@@ -100,9 +99,10 @@ ActiveRecord::Schema.define(version: 20170505080228) do
 
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
+    t.string   "redmine_identifier"
+    t.string   "image"
     t.text     "description"
     t.text     "content"
-    t.string   "redmine_identifier"
     t.integer  "course_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
@@ -130,12 +130,13 @@ ActiveRecord::Schema.define(version: 20170505080228) do
   end
 
   create_table "user_subjects", force: :cascade do |t|
+    t.integer  "status",         default: 0
     t.integer  "user_id"
     t.integer  "user_course_id"
     t.integer  "subject_id"
     t.integer  "course_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["course_id"], name: "index_user_subjects_on_course_id"
     t.index ["subject_id"], name: "index_user_subjects_on_subject_id"
     t.index ["user_course_id"], name: "index_user_subjects_on_user_course_id"
@@ -147,21 +148,18 @@ ActiveRecord::Schema.define(version: 20170505080228) do
     t.string   "avatar"
     t.date     "birthday"
     t.integer  "gender"
-    t.string   "role",                   default: "trainee"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.string   "email",                  default: "",        null: false
-    t.string   "encrypted_password",     default: "",        null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.string   "role",                default: "trainee"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.string   "email",               default: "",        null: false
+    t.string   "encrypted_password",  default: "",        null: false
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,         null: false
+    t.integer  "sign_in_count",       default: 0,         null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
 end

@@ -24,6 +24,9 @@ class Course < ApplicationRecord
   scope :init_courses, ->{where status: :init}
   scope :progress_courses, ->{where status: :progress}
   scope :finish_courses, ->{where status: :finish}
+  scope :active_courses, -> do
+    where(status: :init).or(where(status: :progress))
+  end
 
   def check_end_date
     unless self.start_date.nil?
@@ -35,6 +38,9 @@ class Course < ApplicationRecord
   def update_course_and_user_courses status
     self.update_attributes status: status
     user_courses.update_all status: status
+    if status == :finish
+      user_subjects.update_all status: status
+    end
   end
 
   def course_superusers

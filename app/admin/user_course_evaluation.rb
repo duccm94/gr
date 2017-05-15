@@ -3,11 +3,12 @@ ActiveAdmin.register UserCourseEvaluation do
 
   permit_params UserCourseEvaluation::ATTRIBUTES_PARAMS
 
-  actions :all, except: [:new, :create]
+  actions :all, except: [:new, :create, :destroy]
 
   #index
+  config.batch_actions = false
+
   index do
-    id_column
     column :course {|user_course_evaluation| user_course_evaluation.user_course.course}
     column :user {|user_course_evaluation| user_course_evaluation.user_course.user}
     column :total_point
@@ -29,10 +30,12 @@ ActiveAdmin.register UserCourseEvaluation do
       f.has_many :evaluation_items, allow_destroy: true do |i|
         if i.object.new_record?
           i.input :name
+          i.input :point
         else
           i.input :evaluation_criterium
+          i.input :point, hint: I18n.t("active_admin.max_point_hint",
+            max_point: i.object.evaluation_criterium.max_point)
         end
-        i.input :point
       end
     end
     f.actions
