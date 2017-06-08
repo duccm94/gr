@@ -1,7 +1,10 @@
 ActiveAdmin.register Feedback do
-  menu priority: 6
+  menu priority: 10, if: proc{current_user.admin?}
   permit_params :status
 
+  actions :all, except: [:new, :create, :destroy]
+
+  #index
   config.sort_order = "created_at_desc"
 
   scope :all
@@ -11,9 +14,8 @@ ActiveAdmin.register Feedback do
   scope :implemented
   scope :rejected
 
-  #index
   index do
-    id_column
+    selectable_column
     column :user
     column :title
     column :status {|feedback| status_tag feedback.status}
@@ -26,10 +28,37 @@ ActiveAdmin.register Feedback do
   filter :status, as: :select, collection: Feedback.statuses.map {|key, value| [key.humanize, value]}
   filter :created_at
 
+  batch_action :in_progress do |ids|
+    batch_action_collection.find(ids).each do |feedback|
+      feedback.update_attributes status: :in_progress
+    end
+    redirect_to collection_path, alert: I18n.t("active_admin.alert.feedback_in_progress")
+  end
+
+  batch_action :under_consideration do |ids|
+    batch_action_collection.find(ids).each do |feedback|
+      feedback.update_attributes status: :under_consideration
+    end
+    redirect_to collection_path, alert: I18n.t("active_admin.alert.feedback_under_consideration")
+  end
+
+  batch_action :implemented do |ids|
+    batch_action_collection.find(ids).each do |feedback|
+      feedback.update_attributes status: :implemented
+    end
+    redirect_to collection_path, alert: I18n.t("active_admin.alert.feedback_implemented")
+  end
+
+  batch_action :rejected do |ids|
+    batch_action_collection.find(ids).each do |feedback|
+      feedback.update_attributes status: :rejected
+    end
+    redirect_to collection_path, alert: I18n.t("active_admin.alert.feedback_rejected")
+  end
+
   #show
   show title: :title do
     attributes_table do
-      row :id
       row :user
       row :title
       row :status {status_tag feedback.status}
@@ -47,7 +76,7 @@ ActiveAdmin.register Feedback do
       f.input :user, input_html: {disabled: true}
       f.input :title, input_html: {disabled: true}
       f.input :status
-      f.input :content, input_html: {disabled: true}
+      f.input :content, as: :ckeditor, input_html: {disabled: true}
     end
     f.actions
   end

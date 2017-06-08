@@ -138,7 +138,7 @@ ActiveAdmin.setup do |config|
   #
   # Enable and disable Batch Actions
   #
-  config.batch_actions = false
+  config.batch_actions = true
 
   # == Controller Filters
   #
@@ -210,7 +210,9 @@ ActiveAdmin.setup do |config|
   #
   config.namespace :admin do |admin|
     admin.build_menu :utility_navigation do |menu|
-      menu.add label: "Chat", url: "/conversations", html_options: {target: :blank}
+      menu.add label: "Chat", url: "/conversations", html_options: {target: :_blank}
+      menu.add label: "Feedback", url: "/feedbacks",
+        html_options: {target: :_blank}, if: proc{current_user.trainer?}
       admin.add_current_user_to_menu menu
       admin.add_logout_button_to_menu menu
     end
@@ -250,7 +252,7 @@ ActiveAdmin.setup do |config|
   # Pagination is enabled by default for all resources.
   # You can control the default per page count for all resources here.
   #
-  # config.default_per_page = 30
+  config.default_per_page = 15
   #
   # You can control the max per page count too.
   #

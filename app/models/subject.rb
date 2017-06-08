@@ -1,9 +1,12 @@
 class Subject < ApplicationRecord
   include InitUserSubject
 
-  after_create :create_user_subjects_when_add_new_subject
+  ATTRIBUTES_PARAMS = [:name, :redmine_identifier, :image, :image_cache,
+    :description, :content, :course_id]
 
-  ATTRIBUTES_PARAMS = [:name, :redmine_identifier, :description, :content, :course_id]
+  mount_uploader :image, ImageUploader
+
+  after_create :create_user_subjects_when_add_new_subject
 
   validates :name, presence: true
   validates :redmine_identifier, presence: true
@@ -15,8 +18,16 @@ class Subject < ApplicationRecord
 
   delegate :code, :name, to: :course, prefix: true, allow_nil: true
 
+  def subject_superusers
+    users.superusers
+  end
+
   def subject_trainees
     users.trainees
+  end
+
+  def redmine_link
+    "http://demo.redmine.org/projects/#{self.redmine_identifier}"
   end
 
   private

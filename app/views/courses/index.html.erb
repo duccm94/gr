@@ -1,0 +1,40 @@
+<%= render "conversations/index" %>
+
+<div id="user-course-index">
+  <ul class="list">
+    <li class="paths list-item">
+      <i class="glyphicon glyphicon-th-list"></i>
+      <%= link_to t("course.all_courses"), courses_path, class: "link--underline" %>
+    </li>
+  </ul>
+
+  <% if @user_courses.any? %>
+    <div class="row list-course-items">
+      <% @user_courses.each do |user_course| %>
+        <div class="col-md-4 course-item <%= @course_active_last == user_course ?
+          'last-actived' : 'normal-course' %>">
+          <div class="path-parent">
+            <div class="badge">
+              <%= trainee_image_md user_course.course %>
+            </div>
+            <div class="path-content">
+              <div class="path-header"></div>
+              <h2 class="truncate">
+                <%= link_to user_course.course_name, user_course %>
+              </h2>
+              <h4>
+                <%= link_to user_course.course_code, user_course %>
+              </h4>
+              <p class="path-description">
+                <%= user_course.course_description %>
+              </p>
+              <span class="prs <%= course_label user_course.course.status %>">
+                <%= user_course.course_status %>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

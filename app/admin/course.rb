@@ -8,6 +8,8 @@ ActiveAdmin.register Course do
   scope :progress_courses
   scope :finish_courses
 
+  config.batch_actions = false
+
   config.sort_order = "status_asc"
 
   index do
@@ -34,26 +36,25 @@ ActiveAdmin.register Course do
       row :id
       row :code
       row :name
-      row :image {course.image.file.filename}
-      row :image do
-        image_tag course.image_url, class: "img-responsive",
-          size: Settings.admin.course_show_image if course.image?
-      end
+      row :image {course.image.file.filename if course.image?}
+      row :image {image_md course}
       row :status {status_tag course.status}
       row :description
-      row :content {course.content.html_safe}
+      row :content {course.content.html_safe if course.content}
       row :start_date
       row :end_date
       row :created_at
       row :updated_at
+      row :user_courses {link_to I18n.t("active_admin.all_user_courses"),
+        admin_course_user_courses_path(course.id)}
       row :subjects {link_to I18n.t("active_admin.all_subjects"),
         admin_course_subjects_path(course.id)}
     end
 
-    panel I18n.t("active_admin.subjects") do
-      table_for course.subjects.each do |s|
-        column :name {|s| link_to s.name, admin_course_subject_path(s)}
-        column :description
+    panel I18n.t("active_admin.user_courses") do
+      table_for course.user_courses.find_user_by_role("trainee").each do |uc|
+        column :user {|uc| link_to uc.user.name, admin_course_user_course_path(course, uc)}
+        column :status {|uc| status_tag uc.status}
       end
     end
 
@@ -82,7 +83,7 @@ ActiveAdmin.register Course do
 
   sidebar I18n.t("active_admin.subjects"), only: :show do
     course.subjects.collect do |s|
-      link_to s.name, admin_course_subject_path(s)
+      link_to s.name, admin_course_subject_path(course, s)
     end.join(content_tag("br")).html_safe
   end
 
@@ -129,18 +130,24 @@ ActiveAdmin.register Course do
 
   #other actions
   action_item :start_course, only: :show do
-    link_to I18n.t("active_admin.start"), start_course_admin_course_path(course),
-      class: "addition_action_items", method: :put if course.init?
+    if controller.current_ability.can? :update, course
+      link_to I18n.t("active_admin.start"), start_course_admin_course_path(course),
+        class: "addition_action_items", method: :put if course.init?
+    end
   end
 
   action_item :finish_course, only: :show do
-    link_to I18n.t("active_admin.finish"), finish_course_admin_course_path(course),
-      class: "addition_action_items", method: :put if course.progress?
+    if controller.current_ability.can? :update, course
+      link_to I18n.t("active_admin.finish"), finish_course_admin_course_path(course),
+        class: "addition_action_items", method: :put if course.progress?
+    end
   end
 
   action_item :reopen_course, only: :show do
-    link_to I18n.t("active_admin.reopen"), reopen_course_admin_course_path(course),
-      class: "addition_action_items", method: :put if course.finish?
+    if controller.current_ability.can? :update, course
+      link_to I18n.t("active_admin.reopen"), reopen_course_admin_course_path(course),
+        class: "addition_action_items", method: :put if course.finish?
+    end
   end
 
   member_action :start_course, method: :put do
@@ -164,5 +171,10 @@ ActiveAdmin.register Course do
   #Subjects
   ActiveAdmin.register Subject do
     belongs_to :course, optional: true
+  end
+
+  #UserCourses
+  ActiveAdmin.register UserCourse do
+    belongs_to :course
   end
 end

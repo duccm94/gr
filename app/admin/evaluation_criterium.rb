@@ -7,6 +7,8 @@ ActiveAdmin.register EvaluationCriterium do
   end
 
   #index
+  config.batch_actions = false
+
   index do
     id_column
     column :name

@@ -1,0 +1,68 @@
+<%= render "conversations/index" %>
+
+<div id="subject-show">
+  <div class="row">
+    <div class="cell">
+      <div class="grid">
+        <div class="grid-box grid-box-10">
+          <div class="breadcrumb-bar tac tal--l">
+            <ul class="list breadcrumb mts">
+              <li>
+                <%= link_to root_url do %>
+                  <i class="glyphicon glyphicon-th-list"></i>
+                  <%= t "layout.home" %>
+                <% end %>
+              </li>
+              <li><%= link_to t("course.all_courses"), courses_path %></li>
+              <li><%= link_to "#{@user_subject.course_code} - #{@user_subject.course_name}",
+                user_course_path(@user_subject.user_course) %></li>
+              <li class="active"><%= @user_subject.subject_name %></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row has-sector">
+    <div class="cell">
+      <div class="grid grid-box-tasks">
+        <div class="grid-box grid-box-75">
+          <div class="well well--l">
+            <div class="mbl">
+              <div class="mbl--m">
+                <h2 class="label"><%= @user_subject.subject_name %></h2>
+                <div class="row">
+                  <h2>
+                    <%= t "subject.redmine_identifier" %>:
+                    <%= link_to @user_subject.subject_redmine_identifier,
+                      @user_subject.subject.redmine_link %>
+                  </h2>
+                </div>
+                <div class="row">
+                  <p><b><i>"<%= @user_subject.subject.description %>"</i></b></p>
+                </div>
+                <div class="row">
+                  <p><%= @user_subject.subject.content.html_safe %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-box grid-box-25 sector">
+          <div class="well well--l">
+            <div class="card">
+              <div id="image-course">
+                <%= trainee_image_lg @user_subject.subject %>
+              </div><br>
+            </div>
+            <div class="sector-content">
+              <%= render partial: "shared/list_member",
+                locals: {trainers: @trainers, trainees: @trainees} %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
